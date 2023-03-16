@@ -13,20 +13,22 @@ export class DetailPokemonComponent implements OnInit {
   pokemon: Pokemon|undefined;
 
   constructor(
-    private route: ActivatedRoute, private router : Router,
+    private route: ActivatedRoute,
+    private router : Router,
     private pokemonService: PokemonService
     ) {}
 
   ngOnInit() {
     const pokemonId: string|null = this.route.snapshot.paramMap.get('id');
     if(pokemonId) {
-      this.pokemon = this.pokemonService.getPokemonById(+pokemonId);
-      
+      this.pokemonService.getPokemonById(+pokemonId)
+      .subscribe(pokemon => this.pokemon = pokemon); 
     }
+  }
 
-    if(pokemonId) {
-      this.pokemon = this.pokemonList.find(pokemon => pokemon.id == +pokemonId)
-    }
+  deletePokemon(pokemon: Pokemon ) {
+    this.pokemonService.deletePokemonById(pokemon.id)
+    .subscribe(() => this.goToPokemonList());
   }
 
   goToPokemonList() {
